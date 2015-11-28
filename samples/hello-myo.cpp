@@ -127,9 +127,9 @@ public:
 
         // Print out the orientation. Orientation data is always available, even if no arm is currently recognized.
 
-       /* std::cout << '[' << std::string(roll_w, '*') << std::string(18 - roll_w, ' ') << ']'
+       std::cout << '[' << std::string(roll_w, '*') << std::string(18 - roll_w, ' ') << ']'
                   << '[' << std::string(pitch_w, '*') << std::string(18 - pitch_w, ' ') << ']'
-                  << '[' << std::string(yaw_w, '*') << std::string(18 - yaw_w, ' ') << ']';*/
+                  << '[' << std::string(yaw_w, '*') << std::string(18 - yaw_w, ' ') << ']';
 
         if (onArm) {
             // Print out the lock state, the currently recognized pose, and which arm Myo is being worn on.
@@ -163,142 +163,258 @@ public:
     myo::Pose currentPose;
 };
 
-int main(int argc, char** argv)
+void emojiMenu(DataCollector & collector, std::string emojis[], int & currentPosition, bool & breakLoop)
 {
-    // We catch any exceptions that might occur below -- see the catch statement for more details.
-    try {
+	int scrollDelay = 4200 / (pow(abs(collector.pitch_w - 8) + 1, 1.5) + 5 );
 
-    // First, we create a Hub with our application identifier. Be sure not to use the com.example namespace when
-    // publishing your application. The Hub provides access to one or more Myos.
-    myo::Hub hub("com.example.hello-myo");
+	std::cout << scrollDelay;
 
-    std::cout << "Attempting to find a Myo..." << std::endl;
+	std::cout << "The current position(Emoji) is " << currentPosition << std::endl;
 
-    // Next, we attempt to find a Myo to use. If a Myo is already paired in Myo Connect, this will return that Myo
-    // immediately.
-    // waitForMyo() takes a timeout value in milliseconds. In this case we will try to find a Myo for 10 seconds, and
-    // if that fails, the function will return a null pointer.
-    myo::Myo* myo = hub.waitForMyo(10000);
-
-    // If waitForMyo() returned a null pointer, we failed to find a Myo, so exit with an error message.
-    if (!myo) {
-        throw std::runtime_error("Unable to find a Myo!");
-    }
-
-    // We've found a Myo.
-    std::cout << "Connected to a Myo armband!" << std::endl << std::endl;
-
-    // Next we construct an instance of our DeviceListener, so that we can register it with the Hub.
-    DataCollector collector;
-
-    // Hub::addListener() takes the address of any object whose class inherits from DeviceListener, and will cause
-    // Hub::run() to send events to all registered device listeners.
-    hub.addListener(&collector);
-
-    // Finally we enter our main loop.
-    while (true) {
-        // In each iteration of our main loop, we run the Myo event loop for a set number of milliseconds.
-        // In this case, we wish to update our display 20 times a second, so we run for 1000/20 milliseconds.
-        hub.run(1000/20);
-        // After processing events, we call the print() member function we defined above to print out the values we've
-        // obtained from any events that have occurred.
-        collector.print();
-
-		/* FOR ANGLE//////////////////////////////////
-		if (collector.pitch_w > 9)
-		{
-			std::cout << "Hello!";
-			std::this_thread::sleep_for(std::chrono::milliseconds(1500));
-		}
-		*//////////////////////////////////////////////
-
-		
-		/*if (collector.currentPose.toString() == "fist")
-		{
-			std::cout << "Fist!";
-			std::this_thread::sleep_for(std::chrono::milliseconds(1500));
-		}
-		else if (collector.currentPose.toString() == "waveIn")
-		{
-			std::cout << "Hello!";
-			std::this_thread::sleep_for(std::chrono::milliseconds(1500));
-		}
-		else if (collector.currentPose.toString() == "waveOut")
-		{
-			std::cout << "Bye!";
-			std::this_thread::sleep_for(std::chrono::milliseconds(1500));
-		}
-		else if (collector.currentPose.toString() == "fingersSpread")
-		{
-			std::cout << "What's up!";
-			std::this_thread::sleep_for(std::chrono::milliseconds(1500));
-		}*/
-
-		int currentPosition = 1;
-
-		if (collector.currentPose.toString() == "waveIn")
-		{
-			std::cout << "WqveIn" << std::endl;
-			if (currentPosition > 0)
-			{
-				std::cout << currentPosition;
-				currentPosition--;
-				std::cout << currentPosition;
-			}
-			if (currentPosition<0)
-			{
-				//vibrate
-				std::cout << "Vibrate, too far" << std::endl;
-				continue;
-			}
-			std::this_thread::sleep_for(std::chrono::milliseconds(500));
-		}
-
-		if (collector.currentPose.toString() == "waveOut")
-		{
-			if (currentPosition < 2)
-			{
-				std::cout << currentPosition;
-				currentPosition++;
-				std::cout << currentPosition;
-			}
-			else
-			{
-				//vibrate
-				std::cout << "Vibrate, too far";
-				continue;
-			}
-			std::this_thread::sleep_for(std::chrono::milliseconds(500));
-		}
-
-		if (currentPosition == 0 )
-		{
-			if (collector.currentPose.toString() == "fingersSpread")
-			{
-				//emoji menu
-				std::cout << "Emoji Menu";
-			}
-		}
-		else if (currentPosition == 2 && collector.currentPose.toString() == "fingersSpread")
-		{
-			if (collector.currentPose.toString() == "fingersSpread")
-			{
-				//quick message menu
-				std::cout << "Quick Message Menu";
-			}
-		}
-    }
-
-	while (true)
+	if (collector.pitch_w > 10)
 	{
-		continue;
+			currentPosition++;
+		std::cout << "The current position(Emoji) is " << currentPosition << std::endl;
+	}
+	else if (collector.pitch_w < 7)
+	{
+		currentPosition--;
+		std::cout << "The current position(Emoji) is " << currentPosition << std::endl;
 	}
 
-    // If a standard exception occurred, we print out its message and exit.
-    } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
-        std::cerr << "Press enter to continue.";
-        std::cin.ignore();
-        return 1;
-    }
+	std::this_thread::sleep_for(std::chrono::milliseconds(scrollDelay));
+
+	if (collector.currentPose.toString() == "fingersSpread")
+	{
+		breakLoop = true;
+		std::cout << "Ready to cout: " << emojis[currentPosition] << std::endl;
+	}
+}
+
+void messageMenu(DataCollector & collector, std::string messages[], int & currentPosition, bool & breakLoop)
+{
+	int scrollDelay = 4200 / (pow(abs(collector.pitch_w - 8) + 1, 1.5) + 5);
+
+	std::cout << scrollDelay;
+
+	std::cout << "The current position(Message) is " << currentPosition << std::endl;
+
+	if (collector.pitch_w > 10)
+	{
+		currentPosition++;
+		std::cout << "The current position(Message) is " << currentPosition << std::endl;
+	}
+	else if (collector.pitch_w < 7)
+	{
+		currentPosition--;
+		std::cout << "The current position(Message) is " << currentPosition << std::endl;
+	}
+
+	std::this_thread::sleep_for(std::chrono::milliseconds(scrollDelay));
+
+	if (collector.currentPose.toString() == "fingersSpread")
+	{
+		breakLoop = true;
+		std::cout << "Ready to cout: " << messages[currentPosition] << std::endl;
+	}
+}
+
+
+int main(int argc, char** argv)
+{
+	// We catch any exceptions that might occur below -- see the catch statement for more details.
+	/*try {*/
+
+	// First, we create a Hub with our application identifier. Be sure not to use the com.example namespace when
+	// publishing your application. The Hub provides access to one or more Myos.
+	myo::Hub hub("com.example.hello-myo");
+
+	std::cout << "Attempting to find a Myo..." << std::endl;
+
+	// Next, we attempt to find a Myo to use. If a Myo is already paired in Myo Connect, this will return that Myo
+	// immediately.
+	// waitForMyo() takes a timeout value in milliseconds. In this case we will try to find a Myo for 10 seconds, and
+	// if that fails, the function will return a null pointer.
+	myo::Myo* myo = hub.waitForMyo(10000);
+
+	// If waitForMyo() returned a null pointer, we failed to find a Myo, so exit with an error message.
+	if (!myo) {
+		throw std::runtime_error("Unable to find a Myo!");
+	}
+
+	// We've found a Myo.
+	std::cout << "Connected to a Myo armband!" << std::endl << std::endl;
+
+	// Next we construct an instance of our DeviceListener, so that we can register it with the Hub.
+	DataCollector collector;
+
+	// Hub::addListener() takes the address of any object whose class inherits from DeviceListener, and will cause
+	// Hub::run() to send events to all registered device listeners.
+	hub.addListener(&collector);
+
+	// Finally we enter our main loop.
+
+	
+	const int MAINMENU = 0;
+	const int EMOJIMENU = 1;
+	const int MESSAGEMENU = 2;
+	const int MESSAGEREADY = 3;
+	std::string emojis[11] = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11" };
+	std::string messages[11] = { "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a" };
+
+
+	while (true) 
+	{
+		int currentPosition = 5;
+		bool breakLoopMessage = false;
+		bool breakLoopEmoji = false;
+		int whichMenu = 0;
+	
+		while (true)
+		{
+
+			// In each iteration of our main loop, we run the Myo event loop for a set number of milliseconds.
+			// In this case, we wish to update our display 20 times a second, so we run for 1000/20 milliseconds.
+			hub.run(1000 / 20);
+			// After processing events, we call the print() member function we defined above to print out the values we've
+			// obtained from any events that have occurred.
+			collector.print();
+
+			switch (whichMenu)
+			{
+				case MESSAGEMENU:
+					messageMenu(collector, messages, currentPosition, breakLoopMessage);
+					//if command to return to mainMenu, return to mainMenu
+					if (breakLoopMessage == true)
+					{	
+						//Change whichMenu and remove "break;"
+						break;
+					}
+
+				case EMOJIMENU:
+					emojiMenu(collector, emojis, currentPosition, breakLoopEmoji);
+					//if command to return to mainMenu, return to mainMenu
+					if (breakLoopEmoji == true)
+					{	
+						//Change whichMenu and remove "break;"
+						break;	
+					}
+					
+				default:
+					if (collector.currentPose.toString() == "waveIn")
+					{
+						std::cout << "TextMenu " << std::endl;
+						whichMenu = MESSAGEMENU;
+					}
+					else if (collector.currentPose.toString() == "waveOut") //MAYBE REMOVE "ELSE"
+					{
+						std::cout << "EmojiMenu " << std::endl;
+						whichMenu = EMOJIMENU;
+					}
+			}
+
+
+			/* FOR ANGLE//////////////////////////////////
+			if (collector.pitch_w > 9)
+			{
+				std::cout << "Hello!";
+				std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+			}
+			*//////////////////////////////////////////////
+
+
+			/*if (collector.currentPose.toString() == "fist")
+			{
+				std::cout << "Fist!";
+				std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+			}
+			else if (collector.currentPose.toString() == "waveIn")
+			{
+				std::cout << "Hello!";
+				std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+			}
+			else if (collector.currentPose.toString() == "waveOut")
+			{
+				std::cout << "Bye!";
+				std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+			}
+			else if (collector.currentPose.toString() == "fingersSpread")
+			{
+				std::cout << "What's up!";
+				std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+			}*/
+
+			
+			
+			
+
+			//int currentPosition = 1;
+
+			//if (collector.currentPose.toString() == "waveIn")
+			//{
+			//	std::cout << "WqveIn" << std::endl;
+			//	if (currentPosition > 0)
+			//	{
+			//		std::cout << currentPosition;
+			//		currentPosition--;
+			//		std::cout << currentPosition;
+			//	}
+			//	if (currentPosition<0)
+			//	{
+			//		//vibrate
+			//		std::cout << "Vibrate, too far" << std::endl;
+			//		continue;
+			//	}
+			//	std::this_thread::sleep_for(std::chrono::milliseconds(500));
+			//}
+
+			//if (collector.currentPose.toString() == "waveOut")
+			//{
+			//	if (currentPosition < 2)
+			//	{
+			//		std::cout << currentPosition;
+			//		currentPosition++;
+			//		std::cout << currentPosition;
+			//	}
+			//	else
+			//	{
+			//		//vibrate
+			//		std::cout << "Vibrate, too far";
+			//		continue;
+			//	}
+			//	std::this_thread::sleep_for(std::chrono::milliseconds(500));
+			//}
+
+			//if (currentPosition == 0 )
+			//{
+			//	if (collector.currentPose.toString() == "fingersSpread")
+			//	{
+			//		//emoji menu
+			//		std::cout << "Emoji Menu";
+			//	}
+			//}
+			//else if (currentPosition == 2 && collector.currentPose.toString() == "fingersSpread")
+			//{
+			//	if (collector.currentPose.toString() == "fingersSpread")
+			//	{
+			//		//quick message menu
+			//		std::cout << "Quick Message Menu";
+			//	}
+			//}
+	  //  }
+
+			// If a standard exception occurred, we print out its message and exit.
+			/*} catch (const std::exception& e) {
+				std::cerr << "Error: " << e.what() << std::endl;
+				std::cerr << "Press enter to continue.";
+				std::cin.ignore();
+				return 1;
+			}*/
+	
+		}
+	while (true)
+	{}
+
+	}
+
 }
