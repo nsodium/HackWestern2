@@ -21,6 +21,9 @@ doubleTap
 // The only file that needs to be included to use the Myo C++ SDK is myo.hpp.
 #include <myo/myo.hpp>
 
+const int MESSAGESIZE = 11;
+const int EMOJISIZE = 11;
+
 // Classes that inherit from myo::DeviceListener can be used to receive events from Myo devices. DeviceListener
 // provides several virtual functions for handling different kinds of events. If you do not override an event, the
 // default behavior is to do nothing.
@@ -171,12 +174,12 @@ void emojiMenu(DataCollector & collector, std::string emojis[], int & currentPos
 
 	std::cout << "The current position(Emoji) is " << currentPosition << std::endl;
 
-	if (collector.pitch_w > 10)
+	if (collector.pitch_w > 10 && currentPosition < (EMOJISIZE-1))
 	{
 			currentPosition++;
 		std::cout << "The current position(Emoji) is " << currentPosition << std::endl;
 	}
-	else if (collector.pitch_w < 7)
+	else if (collector.pitch_w < 7 && currentPosition > 0)
 	{
 		currentPosition--;
 		std::cout << "The current position(Emoji) is " << currentPosition << std::endl;
@@ -199,12 +202,12 @@ void messageMenu(DataCollector & collector, std::string messages[], int & curren
 
 	std::cout << "The current position(Message) is " << currentPosition << std::endl;
 
-	if (collector.pitch_w > 10)
+	if (collector.pitch_w > 10 && currentPosition < (MESSAGESIZE-1))
 	{
 		currentPosition++;
 		std::cout << "The current position(Message) is " << currentPosition << std::endl;
 	}
-	else if (collector.pitch_w < 7)
+	else if (collector.pitch_w < 7 && currentPosition > 0)
 	{
 		currentPosition--;
 		std::cout << "The current position(Message) is " << currentPosition << std::endl;
@@ -259,13 +262,14 @@ int main(int argc, char** argv)
 	const int EMOJIMENU = 1;
 	const int MESSAGEMENU = 2;
 	const int MESSAGEREADY = 3;
-	std::string emojis[11] = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11" };
-	std::string messages[11] = { "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a" };
+	
+	std::string emojis[MESSAGESIZE] = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11" };
+	std::string messages[EMOJISIZE] = { "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a" };
 
 
 	while (true) 
 	{
-		int currentPosition = 5;
+		int currentPosition = (MESSAGESIZE+EMOJISIZE)/4;
 		bool breakLoopMessage = false;
 		bool breakLoopEmoji = false;
 		int whichMenu = 0;

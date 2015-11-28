@@ -1,4 +1,4 @@
-﻿Build started 2015-11-28 2:09:36 PM.
+﻿Build started 2015-11-28 3:34:12 PM.
      1>Project "C:\Users\Can\Documents\HackWestern2\samples\hello-myo-VisualStudio2013.vcxproj" on node 2 (Build target(s)).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(392,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (multiple-myos-VisualStudio2013.vcxproj).  This can lead to incorrect clean and rebuild behavior.
      1>ClCompile:
@@ -8,8 +8,8 @@
          c:\users\can\documents\hackwestern2\include\myo\cxx\impl\../detail/ThrowOnError.hpp(39): note: destructor or deallocator has a (possibly implicit) non-throwing exception specification
      1>c:\users\can\documents\hackwestern2\include\myo\cxx\impl\../detail/ThrowOnError.hpp(45): warning C4297: 'myo::ThrowOnError::~ThrowOnError': function assumed not to throw an exception but does
          c:\users\can\documents\hackwestern2\include\myo\cxx\impl\../detail/ThrowOnError.hpp(45): note: destructor or deallocator has a (possibly implicit) non-throwing exception specification
-     1>hello-myo.cpp(168): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-     1>hello-myo.cpp(196): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+     1>hello-myo.cpp(171): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+     1>hello-myo.cpp(199): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Can\Documents\HackWestern2\samples\x64\Debug\hello-myo-VisualStudio2013.exe" /INCREMENTAL /NOLOGO /LIBPATH:..\lib myo64.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\Can\Documents\HackWestern2\samples\x64\Debug\hello-myo-VisualStudio2013.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Can\Documents\HackWestern2\samples\x64\Debug\hello-myo-VisualStudio2013.lib" /MACHINE:X64 "x64\Debug\hello-myo.obj"
          hello-myo-VisualStudio2013.vcxproj -> C:\Users\Can\Documents\HackWestern2\samples\x64\Debug\hello-myo-VisualStudio2013.exe
@@ -22,4 +22,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.24
+Time Elapsed 00:00:01.69
