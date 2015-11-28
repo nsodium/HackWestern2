@@ -8,5 +8,12 @@ int main()
 	
 	string name;
 
+	cin >> name;
+
+	while (true)
+	{
+		continue;
+	}
+
 	return 0;
 }
