@@ -24,4 +24,22 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Debug\Hack Western - Myo to Computer.exe" />
+    <None Include="Debug\Hack Western - Myo to Computer.ilk" />
+    <None Include="Debug\Hack Western - Myo to Computer.pdb" />
+    <None Include="Debug\vc140.idb" />
+    <None Include="Debug\vc140.pdb" />
+    <None Include="Debug\Hack Wes.FA75EE56.tlog\CL.command.1.tlog" />
+    <None Include="Debug\Hack Wes.FA75EE56.tlog\CL.read.1.tlog" />
+    <None Include="Debug\Hack Wes.FA75EE56.tlog\unsuccessfulbuild" />
+    <None Include="Debug\Hack Wes.FA75EE56.tlog\link.write.1.tlog" />
+    <None Include="Debug\Hack Wes.FA75EE56.tlog\link.command.1.tlog" />
+    <None Include="Debug\Hack Wes.FA75EE56.tlog\Hack Western - Myo to Computer.lastbuildstate" />
+    <None Include="Debug\Hack Wes.FA75EE56.tlog\CL.write.1.tlog" />
+    <None Include="Debug\Hack Wes.FA75EE56.tlog\link.read.1.tlog" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Debug\Hack Western - Myo to Computer.log" />
+  </ItemGroup>
 </Project>
