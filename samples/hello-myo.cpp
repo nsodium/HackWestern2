@@ -190,7 +190,7 @@ public:
 			hub.run(1000 / 20);
 		}
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(900));
+		std::this_thread::sleep_for(std::chrono::milliseconds(300));
 
 		hub.run(1000 / 20);
 
@@ -219,9 +219,21 @@ public:
 		for (int i = 0; i < 3; i++)
 		{
 			(*this).movements[i].recordMovement(collector, hub);
-			std::this_thread::sleep_for(std::chrono::milliseconds(900));
+			std::this_thread::sleep_for(std::chrono::milliseconds(300));
 		}
 		return true;
+	}
+
+	std::string recognize()
+	{
+		if (((*this).movements[1].changePitch + (*this).movements[1].changeRoll) < abs((*this).movements[1].changeYaw))
+		{
+			return "WAVE";
+		}
+		else
+		{
+			return "SLICE";
+		}
 	}
 };
 
@@ -324,7 +336,8 @@ int main(int argc, char** argv)
 	const int MAINMENU = 0;
 	const int EMOJIMENU = 1;
 	const int MESSAGEMENU = 2;
-	const int MESSAGEREADY = 3;
+	const int WAVERECOGNITION = 3;
+	const int MESSAGEREADY = 4;
 	
 	std::string emojis[MESSAGESIZE] = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11" };
 	std::string messages[EMOJISIZE] = { "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a" };
@@ -340,9 +353,9 @@ int main(int argc, char** argv)
 		//Movement move1;
 		//bool recorded = false;
 
-		Gesture g1;
+	/*	Gesture g1;
 		bool recorded = false;
-
+*/
 		while (true)
 		{
 
@@ -354,7 +367,7 @@ int main(int argc, char** argv)
 			collector.print();
 
 
-			if (recorded == false)
+	/*		if (recorded == false)
 			{
 				recorded = g1.recordGesture(collector, hub);
 			}
@@ -362,7 +375,7 @@ int main(int argc, char** argv)
 			for (int i = 0; i < 3; i++)
 			{
 				std::cout << g1.movements[i].changePitch << g1.movements[i].changeRoll << g1.movements[i].changeYaw << "   ";
-			}
+			}*/
 			
 
 
@@ -392,7 +405,14 @@ int main(int argc, char** argv)
 						//Change whichMenu and remove "break;"
 						break;	
 					}
-					
+
+				//case WAVERECOGNITION:
+				//	Gesture g2;
+				//	g2.recordGesture(collector, hub);
+				//	std::string what = g2.recognize();
+				//	std::cout << what;
+				//	//recognize gesture
+				//	
 				default:
 					if (collector.currentPose.toString() == "waveIn")
 					{
@@ -403,6 +423,11 @@ int main(int argc, char** argv)
 					{
 						std::cout << "EmojiMenu " << std::endl;
 						whichMenu = EMOJIMENU;
+					}
+					else if (collector.currentPose.toString() == "fist")
+					{
+						std::cout << "GestureRecognition " << std::endl;
+						whichMenu = WAVERECOGNITION;
 					}
 			}
 
