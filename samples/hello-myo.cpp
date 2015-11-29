@@ -6,8 +6,6 @@ fingersSpread
 doubleTap
 */
 
-
-
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <iostream>
@@ -18,8 +16,7 @@ doubleTap
 #include <chrono>
 #include <thread>
 
-// The only file that needs to be included to use the Myo C++ SDK is myo.hpp.
-#include <myo/myo.hpp>
+#include <myo/myo.hpp> // The only file that needs to be included to use the Myo C++ SDK is myo.hpp.
 
 const int MESSAGESIZE = 11;
 const int EMOJISIZE = 11;
@@ -166,6 +163,68 @@ public:
     myo::Pose currentPose;
 };
 
+class Movement
+{
+public:
+	int changePitch, changeYaw, changeRoll;
+
+	Movement()
+	{
+		changePitch = 0;
+		changeYaw = 0;
+		changeRoll = 0;
+	}
+
+	bool recordMovement(DataCollector & collector, myo::Hub & hub) //BAD CODING PRACTICE, MAKE A CONSTRUCTOR
+	{
+		hub.run(1000 / 20); //Potentially erroneous 
+		
+		int initPitch = collector.pitch_w;
+		int initYaw = collector.yaw_w; //take the distance one way and then the opposite way; use whichever is shortest (SINCE YAW STARTS ON THE EDGE)
+		int initRoll = collector.roll_w;
+
+		hub.run(1000/20);
+
+		while (abs(initPitch - collector.pitch_w) < 3 && abs(initRoll - collector.pitch_w) < 3 && abs(initYaw - collector.yaw_w) < 3)
+		{
+			hub.run(1000 / 20);
+		}
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(900));
+
+		hub.run(1000 / 20);
+
+		(*this).changePitch = collector.pitch_w - initPitch;
+		(*this).changeRoll = collector.roll_w - initRoll;
+		(*this).changeYaw = collector.yaw_w - initYaw;
+		return true;
+
+		//hub.run(1000 / 20);
+		//initPitch = collector.pitch_w;
+		//initYaw = collector.yaw_w;
+		//initRoll = collector.roll_w;
+	}
+};
+
+class Gesture
+{
+public:
+	Movement movements[3];
+
+	Gesture()
+	{}
+
+	bool recordGesture(DataCollector & collector, myo::Hub & hub)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			(*this).movements[i].recordMovement(collector, hub);
+			std::this_thread::sleep_for(std::chrono::milliseconds(900));
+		}
+		return true;
+	}
+};
+
 void emojiMenu(DataCollector & collector, std::string emojis[], int & currentPosition, bool & breakLoop)
 {
 	int scrollDelay = 4200 / (pow(abs(collector.pitch_w - 8) + 1, 1.5) + 5 );
@@ -222,6 +281,10 @@ void messageMenu(DataCollector & collector, std::string messages[], int & curren
 	}
 }
 
+void specialGestures(DataCollector & collector)
+{
+	int i = 0;
+}
 
 int main(int argc, char** argv)
 {
@@ -274,6 +337,12 @@ int main(int argc, char** argv)
 		bool breakLoopEmoji = false;
 		int whichMenu = 0;
 	
+		//Movement move1;
+		//bool recorded = false;
+
+		Gesture g1;
+		bool recorded = false;
+
 		while (true)
 		{
 
@@ -283,6 +352,26 @@ int main(int argc, char** argv)
 			// After processing events, we call the print() member function we defined above to print out the values we've
 			// obtained from any events that have occurred.
 			collector.print();
+
+
+			if (recorded == false)
+			{
+				recorded = g1.recordGesture(collector, hub);
+			}
+			
+			for (int i = 0; i < 3; i++)
+			{
+				std::cout << g1.movements[i].changePitch << g1.movements[i].changeRoll << g1.movements[i].changeYaw << "   ";
+			}
+			
+
+
+			/*if (recorded == false)
+			{
+				recorded = move1.recordMovement(collector, hub);
+			}
+			std::cout << move1.changePitch << move1.changeRoll << move1.changeYaw; */
+
 
 			switch (whichMenu)
 			{
@@ -323,11 +412,8 @@ int main(int argc, char** argv)
 			{
 				std::cout << "Hello!";
 				std::this_thread::sleep_for(std::chrono::milliseconds(1500));
-			}
-			*//////////////////////////////////////////////
-
-
-			/*if (collector.currentPose.toString() == "fist")
+			
+			if (collector.currentPose.toString() == "fist")
 			{
 				std::cout << "Fist!";
 				std::this_thread::sleep_for(std::chrono::milliseconds(1500));
